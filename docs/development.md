@@ -183,54 +183,99 @@ app.post('/guess', (req, res) => {
 
 ## 🧪 Testing
 
-### Manuel testing
+Vi har et omfattende test suite med Jest, Supertest og JSDOM.
+
+### Kør Tests
 
 ```bash
-# Test backend API
-curl -X GET http://localhost:3000/game
-curl -X POST http://localhost:3000/guess \
-  -H "Content-Type: application/json" \
-  -d '{"guess":"HUSET"}'
+# Alle tests
+npm test
 
-# Test frontend
-# 1. Åbn http://localhost:3000
-# 2. Test game functionality manuelt
-# 3. Test på forskellige skærmstørrelser
-# 4. Test på mobile devices
+# Specifik test kategori
+npm test -- --testPathPattern=tests/unit
+npm test -- --testPathPattern=tests/integration  
+npm test -- --testPathPattern=tests/frontend
+
+# Watch mode (development)
+npm run test:watch
+
+# Coverage report
+npm run test:coverage
 ```
 
-### Test cases der skal verificeres
+### Test Struktur
 
-#### Frontend tests
-- [ ] Kan indtaste ord via fysisk tastatur
-- [ ] Kan indtaste ord via virtuelt tastatur
-- [ ] Feedback farver vises korrekt
-- [ ] Spil slutter efter 6 forsøg eller når vundet
-- [ ] Responsive design virker på mobile
-- [ ] Keyboard opdateres med farver efter gæt
+```
+tests/
+├── unit/               # Unit tests for core logic
+│   ├── game.test.js   # WordleGame class tests
+│   ├── words.test.js  # Word management tests
+│   └── simple-game.test.js # Basic game functionality
+├── integration/        # API endpoint tests
+│   └── api.test.js    # Express server integration
+├── frontend/          # UI and browser tests
+│   └── ui.test.js     # DOM interactions and game UI
+├── fixtures/          # Test data
+│   └── testWords.txt  # Sample word lists
+└── README.md          # Detailed test documentation
+```
 
-#### Backend tests
-- [ ] `/game` endpoint returnerer korrekt game state
-- [ ] `/guess` endpoint validerer word length
-- [ ] `/guess` endpoint validerer word existence
-- [ ] Session management virker korrekt
-- [ ] Game state gemmes per session
-- [ ] Health endpoint returnerer OK
+### Test Coverage
 
-### Future: Automatiserede tests
+- **Unit Tests**: Game logic, word validation, feedback algorithms
+- **Integration Tests**: API endpoints, session management, error handling
+- **Frontend Tests**: DOM manipulation, user interactions, game flow
+- **End-to-End Scenarios**: Complete gameplay from start to finish
 
-Vi planlægger at tilføje:
+### Coverage Goals
+
+- **Statements**: >90%
+- **Branches**: >85%
+- **Functions**: >90%
+- **Lines**: >90%
+
+### Continuous Integration
+
+Tests køre automatisk ved:
+- Push til `master` eller `develop` branches
+- Pull requests til `master`
+- Multiple Node.js versions (16, 18, 20)
+
+Se `.github/workflows/test.yml` for CI konfiguration.
+
+### Writing Tests
 
 ```javascript
-// Jest test eksempel (ikke implementeret endnu)
+// Jest test example
 describe('WordleGame', () => {
   test('should validate 5-letter words only', () => {
     const game = new WordleGame();
     expect(() => game.makeGuess('test')).toThrow('Word must be exactly 5 letters');
     expect(() => game.makeGuess('tested')).toThrow('Word must be exactly 5 letters');
   });
+
+  test('should win when correct word is guessed', () => {
+    const game = new WordleGame();
+    const result = game.makeGuess('stole');
+    expect(result.gameState).toBe('won');
+  });
 });
 ```
+
+### Debugging Tests
+
+```bash
+# Specific test file
+npm test -- tests/unit/game.test.js
+
+# Single test pattern
+npm test -- --testNamePattern="should win"
+
+# Debug with Node inspector
+node --inspect-brk node_modules/.bin/jest tests/unit/game.test.js
+```
+
+Se [Test Documentation](../tests/README.md) for detaljerede test guidelines og best practices.
 
 ## 🔄 Git Workflow
 
