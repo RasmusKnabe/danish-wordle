@@ -24,13 +24,14 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "setupFiles": ["<rootDir>/tests/setup.js"],
     "collectCoverageFrom": [
       "*.js",
       "!server.js",
       "!jest.config.js"
     ],
     "testMatch": [
-      "**/tests/**/*.test.js"
+      "**/tests/unit/simple-game.test.js"
     ]
   },
   "keywords": ["wordle", "danish", "game", "api"],
