@@ -1,8 +1,28 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(ssh:*)",
+      "Bash(git add:*)",
+      "Bash(echo:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm test)",
+      "Bash(npm test:*)"
     ],
     "deny": []
+  },
+  "mcpServers": {
+    "ssh-server": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-ssh@latest",
+        "ssh://root@185.185.126.120:22"
+      ],
+      "env": {
+        "SSH_AUTH_SOCK": ""
+      }
+    }
   }
 }

@@ -38,9 +38,9 @@ class WordleGame {
       gameState: this.gameState,
       attempts: this.guesses.length,
       maxAttempts: this.maxGuesses,
-      guesses: this.guesses,
-      lastGuess: { word, result },
-      word: this.gameState === 'lost' ? this.targetWord : null
+      guesses: this.guesses.map(g => ({ word: g.word, feedback: g.result })),
+      lastGuess: { word, feedback: result },
+      word: this.gameState !== 'playing' ? this.targetWord : null
     };
   }
 
@@ -52,7 +52,7 @@ class WordleGame {
     // First pass: mark correct positions
     for (let i = 0; i < 5; i++) {
       if (guessLetters[i] === targetLetters[i]) {
-        result[i] = 'correct';
+        result[i] = { letter: guessLetters[i], status: 'correct' };
         targetLetters[i] = null; // Mark as used
         guessLetters[i] = null; // Mark as processed
       }
@@ -63,10 +63,10 @@ class WordleGame {
       if (guessLetters[i] !== null) {
         const letterIndex = targetLetters.indexOf(guessLetters[i]);
         if (letterIndex !== -1) {
-          result[i] = 'wrong_position';
+          result[i] = { letter: guessLetters[i], status: 'wrong-position' };
           targetLetters[letterIndex] = null; // Mark as used
         } else {
-          result[i] = 'wrong';
+          result[i] = { letter: guessLetters[i], status: 'wrong' };
         }
       }
     }
