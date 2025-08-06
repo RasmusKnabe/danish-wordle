@@ -1,0 +1,32 @@
+# Jekyll configuration for GitHub Pages
+title: "Danish Wordle Documentation"
+description: "Comprehensive documentation for the Danish Wordle game"
+baseurl: "/danish-wordle"
+url: "https://rasmusknabe.github.io"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Navigation
+header_pages:
+  - installation.md
+  - deployment.md
+  - api-reference.md
+  - architecture.md
+  - user-guide.md
+  - development.md
+  - troubleshooting.md
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
