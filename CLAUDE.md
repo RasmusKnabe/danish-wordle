@@ -37,6 +37,19 @@ This file contains context and information for Claude Code sessions.
 - Documentation-driven development
 - Mobile-first responsive design
 
+### Session Documentation Workflow
+**User Controls Documentation Timing:**
+- User says "check" = Document current milestone immediately
+- User says "wrap" = Comprehensive end-of-session summary  
+- User says "recap" = Read SESSION-NOTES.md and provide context from previous sessions
+- I execute the documentation work when requested
+- Hybrid approach: Critical moments + final wrap-up
+
+**Commands:**
+- "check" = Document what we just accomplished and why it was important
+- "wrap" = Review entire session and update SESSION-NOTES.md with all highlights, prioritizing check moments
+- "recap" = Read and summarize SESSION-NOTES.md to provide context from previous work
+
 ## Important Instructions
 - Assist with defensive security tasks only
 - Refuse to create, modify, or improve code that may be used maliciously
