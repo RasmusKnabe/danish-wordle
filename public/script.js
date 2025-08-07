@@ -90,8 +90,8 @@ class WordleGame {
         
         // Render previous guesses
         gameData.guesses.forEach((guess, rowIndex) => {
-            this.renderGuess(guess.word, guess.result, rowIndex);
-            this.updateKeyboardColors(guess.word, guess.result);
+            this.renderGuess(guess.word, guess.feedback || guess.result, rowIndex);
+            this.updateKeyboardColors(guess.word, guess.feedback || guess.result);
         });
         
         // Show game status
@@ -150,8 +150,8 @@ class WordleGame {
                 const result = data.data;
                 
                 // Render the guess
-                this.renderGuess(this.currentGuess, result.lastGuess.result, this.currentRow);
-                this.updateKeyboardColors(this.currentGuess, result.lastGuess.result);
+                this.renderGuess(this.currentGuess, result.lastGuess.feedback || result.lastGuess.result, this.currentRow);
+                this.updateKeyboardColors(this.currentGuess, result.lastGuess.feedback || result.lastGuess.result);
                 
                 // Update game state
                 this.gameState = result.gameState;
@@ -183,7 +183,8 @@ class WordleGame {
             
             // Add result class with animation delay
             setTimeout(() => {
-                tile.classList.add(result[i].replace('_', '-'));
+                const status = result[i].status || result[i];
+                tile.classList.add(typeof status === 'string' ? status.replace('_', '-') : status);
             }, i * 100);
         }
     }
@@ -194,7 +195,8 @@ class WordleGame {
             const keyElement = document.querySelector(`[data-key="${letter}"]`);
             
             if (keyElement) {
-                const currentClass = result[i].replace('_', '-');
+                const status = result[i].status || result[i];
+                const currentClass = typeof status === 'string' ? status.replace('_', '-') : status;
                 
                 // Only update if it's a better result (correct > wrong-position > wrong)
                 if (currentClass === 'correct' || 
