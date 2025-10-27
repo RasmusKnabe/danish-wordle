@@ -38,17 +38,25 @@ This file contains context and information for Claude Code sessions.
 - Mobile-first responsive design
 
 ### Session Documentation Workflow
-**User Controls Documentation Timing:**
-- User says "check" = Document current milestone immediately
-- User says "wrap" = Comprehensive end-of-session summary  
-- User says "recap" = Read SESSION-NOTES.md and provide context from previous sessions
-- I execute the documentation work when requested
-- Hybrid approach: Critical moments + final wrap-up
+**Enhanced Command System:**
 
 **Commands:**
-- "check" = Document what we just accomplished and why it was important
-- "wrap" = Review entire session and update SESSION-NOTES.md with all highlights, prioritizing check moments
-- "recap" = Read and summarize SESSION-NOTES.md to provide context from previous work
+- "/check" = Document current milestone in SESSION-NOTES.md only (quick logging)
+- "/wrap" = Complete session wrap-up: update SESSION-NOTES.md + sync relevant project documentation
+- "/recap" = Automatic full context: reads SESSION-NOTES.md, CLAUDE.md, README.md, package.json, and git status for comprehensive project state
+- "/sync" = Update project documentation only (README, API docs, etc.) without session logging
+
+**Workflow Logic:**
+- `/check` = Fast, frequent use during development work
+- `/wrap` = Comprehensive, end-of-session (SESSION-NOTES + docs update)  
+- `/recap` = Comprehensive, start-of-session (read all context)
+- `/sync` = Documentation maintenance without session overhead
+
+**What gets updated in `/wrap` and `/sync`:**
+- README.md (if project changes warrant it)
+- API documentation (docs/ folder)
+- Package.json descriptions
+- Any technical docs that became outdated during the session
 
 ## Important Instructions
 - Assist with defensive security tasks only
@@ -72,3 +80,13 @@ This file contains context and information for Claude Code sessions.
 - Batch multiple tool calls in single response when possible
 - Use WebFetch for Claude Code documentation questions
 - Reference code with `file_path:line_number` pattern
+
+## SSH Server Access
+To enable SSH access to live server (185.185.126.120) in new sessions:
+
+1. **Load SSH key**: User must run `ssh-add ~/.ssh/id_rsa` in terminal first
+2. **Server connection**: Use `root@185.185.126.120` (not rasmusknabe)
+3. **SSH config**: Already configured in `~/.ssh/config` as `wordle-server` host
+4. **MCP Server**: Configured in `.claude/settings.local.json` for root access
+5. **Wordle location**: `/home/rasmusknabe/wordle/` (owned by rasmusknabe, accessed via root)
+6. **PM2 setup**: Installed and configured for persistent Node.js server
