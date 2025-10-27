@@ -37,10 +37,8 @@ header h1 {
     display: grid;
     grid-template-rows: repeat(6, 1fr);
     row-gap: 5px;
-    margin-bottom: 0px;
+    margin-bottom: 30px;
     padding: 60px;
-    padding-top: 20px;
-    padding-bottom: 20px;
 }
 
 .game-row {
