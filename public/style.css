@@ -22,10 +22,10 @@ body{
 }
 
 .game-board-row input{
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     font-size: 25px;
-    line-height: 50px;
+    line-height: 45px;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
