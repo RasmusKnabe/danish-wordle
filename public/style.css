@@ -4,6 +4,7 @@ body{
     padding: 10px 5px;
     min-height: 100vh;
     box-sizing: border-box;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* iPhone specific optimizations */
@@ -39,8 +40,9 @@ body{
 @media screen and (max-width: 390px) {
     .game-board-container {
         margin: 0px auto 15px auto;
-        min-width: 260px;
-        max-width: 320px;
+        min-width: 300px;
+        max-width: 95%;
+        width: 95%;
     }
     
     .game-keyboard-container {
@@ -51,7 +53,14 @@ body{
     }
 }
 
-.game-board-row input{
+.game-board-row {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.tile {
     width: 40px;
     height: 40px;
     font-size: 20px;
@@ -62,18 +71,34 @@ body{
     border: 2px solid #ccc;
     outline: none;
     border-radius: 4px;
-    margin: 2px;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* Prevent iOS keyboard from appearing */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 
 /* Mobile tile optimizations */
 @media screen and (max-width: 390px) {
-    .game-board-row input {
-        width: 35px;
-        height: 35px;
-        font-size: 18px;
-        line-height: 35px;
-        margin: 1.5px;
-        border-radius: 3px;
+    .game-board-row {
+        gap: 6px;
+        margin-bottom: 6px;
+    }
+    
+    .tile {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+        line-height: 55px;
+        margin: 0;
+        border-radius: 4px;
+        box-sizing: border-box;
     }
 }
 
@@ -81,7 +106,13 @@ body{
     border-color: #888;
 }
 
-.tile:disabled:not(.correct):not(.present):not(.absent) {
+.tile.read-only {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.tile.disabled:not(.correct):not(.present):not(.absent) {
     background-color: #f5f5f5;
     color: #ccc;
     cursor: not-allowed;

@@ -30,13 +30,14 @@ class WordleGameUI {
             timestamp: Date.now()
         };
         
-        // Gem alle gæt og deres feedback
+        // Gem alle gæt og deres feedback + nuværende delvis input
         const rows = document.querySelectorAll('.game-board-row');
         rows.forEach((row, rowIndex) => {
             if (rowIndex < this.currentRow || (rowIndex === this.currentRow && this.gameCompleted)) {
+                // Submittet række med feedback
                 const inputs = row.querySelectorAll('.tile');
                 const guess = {
-                    word: Array.from(inputs).map(input => input.value).join(''),
+                    word: Array.from(inputs).map(input => input.textContent || '').join(''),
                     feedback: []
                 };
                 
@@ -47,12 +48,32 @@ class WordleGameUI {
                     else if (input.classList.contains('absent')) status = 'absent';
                     
                     guess.feedback.push({
-                        letter: input.value,
+                        letter: input.textContent || '',
                         status: status
                     });
                 });
                 
                 gameState.guesses.push(guess);
+            } else if (rowIndex === this.currentRow && !this.gameCompleted) {
+                // Nuværende række med delvis input (uden feedback)
+                const inputs = row.querySelectorAll('.tile');
+                const currentInput = Array.from(inputs).map(input => input.textContent || '').join('');
+                if (currentInput.trim() !== '') {
+                    const guess = {
+                        word: currentInput,
+                        feedback: [],
+                        partial: true // Markér som delvis input
+                    };
+                    
+                    inputs.forEach(input => {
+                        guess.feedback.push({
+                            letter: input.textContent || '',
+                            status: 'none' // Ingen feedback endnu
+                        });
+                    });
+                    
+                    gameState.guesses.push(guess);
+                }
             }
         });
         
@@ -99,19 +120,44 @@ class WordleGameUI {
             
             inputs.forEach((input, colIndex) => {
                 const feedback = guess.feedback[colIndex];
-                input.value = feedback.letter;
+                input.textContent = feedback.letter;
                 
-                // Tilføj farve feedback
-                input.classList.remove('correct', 'present', 'absent');
-                input.classList.add(feedback.status);
-                
-                // Opdater keyboard
-                this.updateKeyboardColor(feedback.letter, feedback.status);
+                // Tilføj farve feedback kun hvis ikke partial input
+                if (!guess.partial && feedback.status !== 'none') {
+                    input.classList.remove('correct', 'present', 'absent');
+                    input.classList.add(feedback.status);
+                    
+                    // Opdater keyboard
+                    this.updateKeyboardColor(feedback.letter, feedback.status);
+                }
             });
         });
         
+        // Gendan nuværende række hvis der er delvis input
+        if (!this.gameCompleted && this.currentRow < this.maxRows) {
+            this.restoreCurrentRowInput();
+        }
+        
         // Opdater row states
         this.updateRowStates();
+    }
+    
+    restoreCurrentRowInput() {
+        // Prøv at gendanne delvis input i nuværende række
+        const rows = document.querySelectorAll('.game-board-row');
+        const currentRowElement = rows[this.currentRow];
+        const inputs = currentRowElement.querySelectorAll('.tile');
+        
+        // Find den sidste udfyldte position
+        let lastFilledIndex = -1;
+        inputs.forEach((input, index) => {
+            if (input.textContent && input.textContent.trim() !== '') {
+                lastFilledIndex = index;
+            }
+        });
+        
+        // Sæt currentCol til næste ledige position
+        this.currentCol = Math.min(lastFilledIndex + 1, this.maxCols - 1);
     }
     
     updateRowStates() {
@@ -120,15 +166,23 @@ class WordleGameUI {
         rows.forEach((row, rowIndex) => {
             const inputs = row.querySelectorAll('.tile');
             
-            inputs.forEach(input => {
-                if (rowIndex === this.currentRow) {
-                    // Aktiv række - enable inputs
-                    input.disabled = false;
+            inputs.forEach((input, colIndex) => {
+                if (rowIndex === this.currentRow && !this.gameCompleted) {
+                    // Aktiv række - enable tiles
+                    input.classList.remove('disabled', 'read-only');
                     input.classList.add('active-row');
-                } else {
-                    // Inaktiv række - disable inputs
-                    input.disabled = true;
+                    input.setAttribute('tabindex', '0');
+                } else if (rowIndex < this.currentRow) {
+                    // Submittet række - readonly men ikke disabled
+                    input.classList.remove('disabled');
+                    input.classList.add('read-only');
                     input.classList.remove('active-row');
+                    input.setAttribute('tabindex', '-1');
+                } else {
+                    // Fremtidige rækker - disable tiles
+                    input.classList.add('disabled', 'read-only');
+                    input.classList.remove('active-row');
+                    input.setAttribute('tabindex', '-1');
                 }
             });
         });
@@ -143,7 +197,7 @@ class WordleGameUI {
     
     focusCurrentCell() {
         const input = this.getCurrentInput();
-        if (input && !input.disabled) {
+        if (input && !input.classList.contains('disabled')) {
             input.focus();
         }
     }
@@ -261,22 +315,22 @@ class WordleGameUI {
     
     addLetter(letter) {
         const currentInput = this.getCurrentInput();
-        if (currentInput && !currentInput.disabled) {
-            currentInput.value = letter;
+        if (currentInput && !currentInput.classList.contains('disabled')) {
+            currentInput.textContent = letter;
             this.moveToNextCell();
         }
     }
     
     deleteLetter() {
         const currentInput = this.getCurrentInput();
-        if (currentInput && currentInput.value !== '') {
-            currentInput.value = '';
+        if (currentInput && currentInput.textContent !== '') {
+            currentInput.textContent = '';
         } else {
             // Hvis nuværende felt er tomt, gå til forrige og slet
             this.moveToPreviousCell();
             const prevInput = this.getCurrentInput();
             if (prevInput) {
-                prevInput.value = '';
+                prevInput.textContent = '';
             }
         }
     }
@@ -292,7 +346,7 @@ class WordleGameUI {
         const currentRowElement = rows[this.currentRow];
         const inputs = currentRowElement.querySelectorAll('.tile');
         
-        const word = Array.from(inputs).map(input => input.value).join('');
+        const word = Array.from(inputs).map(input => input.textContent || '').join('');
         
         if (word.length === this.maxCols) {
             console.log('Submitted word:', word);
