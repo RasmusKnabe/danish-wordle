@@ -14,7 +14,7 @@ body{
 
 .game-board-container{
     margin: 0px auto;
-    min-width: 700px;
+    min-width: 321px;
 }
 
 .game-keyboard-container{
@@ -135,8 +135,8 @@ body{
 }
 
 .key {
-    min-width: 43px;
-    height: 58px;
+    min-width: 33px;
+    height: 48px;
     border: none;
     border-radius: 4px;
     background-color: #e9eaec;
