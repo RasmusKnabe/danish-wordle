@@ -1,5 +1,16 @@
 body{
     background-color: #fbfbfb;
+    margin: 0;
+    padding: 10px 5px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* iPhone specific optimizations */
+@media screen and (max-width: 390px) {
+    body {
+        padding: 5px 2px;
+    }
 }
 
 .container{
@@ -13,26 +24,54 @@ body{
 }
 
 .game-board-container{
-    margin: 0px auto;
-    min-width: 321px;
+    margin: 0px auto 20px auto;
+    min-width: 280px;
+    max-width: 350px;
 }
 
 .game-keyboard-container{
-    margin: 50px auto 0px auto;
+    margin: 20px auto 0px auto;
+    max-width: 350px;
+}
+
+/* Mobile optimizations */
+@media screen and (max-width: 390px) {
+    .game-board-container {
+        margin: 0px auto 15px auto;
+        min-width: 260px;
+        max-width: 320px;
+    }
+    
+    .game-keyboard-container {
+        margin: 15px auto 0px auto;
+        max-width: 320px;
+    }
 }
 
 .game-board-row input{
-    width: 45px;
-    height: 45px;
-    font-size: 25px;
-    line-height: 45px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    line-height: 40px;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
     border: 2px solid #ccc;
     outline: none;
-    border-radius: 5px;
-    margin: 3px;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+/* Mobile tile optimizations */
+@media screen and (max-width: 390px) {
+    .game-board-row input {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+        line-height: 35px;
+        margin: 1.5px;
+        border-radius: 3px;
+    }
 }
 
 .tile:focus{
@@ -135,13 +174,13 @@ body{
 }
 
 .key {
-    min-width: 33px;
-    height: 48px;
+    min-width: 28px;
+    height: 40px;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     background-color: #e9eaec;
     color: #333;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
     display: flex;
@@ -149,6 +188,21 @@ body{
     align-items: center;
     text-transform: uppercase;
     transition: background-color 0.1s ease;
+}
+
+/* Mobile keyboard optimizations */
+@media screen and (max-width: 390px) {
+    .key {
+        min-width: 24px;
+        height: 35px;
+        font-size: 0.8rem;
+        border-radius: 2px;
+    }
+    
+    .keyboard-row {
+        gap: 3px;
+        margin-bottom: 4px;
+    }
 }
 
 .key:hover {
@@ -160,8 +214,18 @@ body{
 }
 
 .key.action-key {
-    min-width: 65px;
-    font-size: 0.8rem;
+    min-width: 50px;
+    font-size: 0.7rem;
+    padding: 0 6px;
+}
+
+/* Mobile action key optimizations */
+@media screen and (max-width: 390px) {
+    .key.action-key {
+        min-width: 40px;
+        font-size: 0.6rem;
+        padding: 0 4px;
+    }
 }
 
 .key.correct {
