@@ -436,7 +436,7 @@ class WordleGameUI {
                         input.classList.add(status);
                         
                         // Opdater keyboard farver
-                        this.updateKeyboardColor(input.value, status);
+                        this.updateKeyboardColor(input.textContent, status);
                         
                         resolve();
                     }, 300); // Midten af flip animation
