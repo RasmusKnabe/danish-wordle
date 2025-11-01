@@ -87,11 +87,14 @@ class WordleGameUI {
         try {
             const gameState = JSON.parse(savedState);
             
-            // Tjek om det er fra i dag (simpel check)
-            const now = Date.now();
-            const dayInMs = 24 * 60 * 60 * 1000;
-            if (now - gameState.timestamp > dayInMs) {
-                // Gammel state - clear den
+            // Tjek om det er fra i dag (check på dato ikke tid)
+            const today = new Date();
+            const savedDate = new Date(gameState.timestamp);
+            const todayDateString = today.toDateString();
+            const savedDateString = savedDate.toDateString();
+            
+            if (todayDateString !== savedDateString) {
+                // Ny dag - clear den gamle state
                 localStorage.removeItem('wordle-game-state');
                 return;
             }
