@@ -380,12 +380,8 @@ class WordleGameUI {
                         // Debug: vis feedback array
                         console.log('Feedback array:', feedback);
                         
-                        // Tjek om ordet faktisk er korrekt ved at se på feedback
-                        const allCorrect = feedback.every(f => f.status === 'correct');
-                        console.log('All letters correct:', allCorrect); // Debug log
-                        
                         // Tjek om spillet er slut
-                        if (allCorrect && result.gameState === 'won') {
+                        if (result.gameState === 'won') {
                             console.log('Game won! Starting celebration...'); // Debug log
                             this.gameCompleted = true;
                             this.saveGameState();
