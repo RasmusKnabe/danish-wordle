@@ -231,48 +231,6 @@ class WordleGameUI {
     setupEventListeners() {
         // Event listener for alle input felter
         document.querySelectorAll('.tile').forEach((input, index) => {
-            // Input event - begræns til ét bogstav og hop videre
-            input.addEventListener('input', (e) => {
-                const value = e.target.value.toUpperCase();
-                
-                // Begræns til ét tegn og kun bogstaver
-                if (value.length > 1) {
-                    e.target.value = value.charAt(value.length - 1);
-                } else if (value && /^[A-ZÆØÅ]$/.test(value)) {
-                    e.target.value = value;
-                    // Auto-advance til næste felt
-                    this.moveToNextCell();
-                } else if (value && !/^[A-ZÆØÅ]$/.test(value)) {
-                    // Fjern ugyldige tegn
-                    e.target.value = '';
-                }
-            });
-            
-            // Keydown event - håndter navigation
-            input.addEventListener('keydown', (e) => {
-                switch(e.key) {
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        this.moveToNextCell();
-                        break;
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        this.moveToPreviousCell();
-                        break;
-                    case 'Backspace':
-                        // Hvis feltet er tomt, gå til forrige felt
-                        if (e.target.value === '') {
-                            e.preventDefault();
-                            this.moveToPreviousCell();
-                        }
-                        break;
-                    case 'Enter':
-                        e.preventDefault();
-                        this.submitRow();
-                        break;
-                }
-            });
-            
             // Click event - opdater currentCol når der klikkes
             input.addEventListener('click', (e) => {
                 if (!e.target.disabled) {
@@ -313,6 +271,35 @@ class WordleGameUI {
         
         document.getElementById('backspace-key')?.addEventListener('click', () => {
             this.deleteLetter();
+        });
+
+        // Fysisk tastatur (desktop) - bruger samme funktioner som de virtuelle taster
+        document.addEventListener('keydown', async (e) => {
+            if (e.ctrlKey || e.metaKey || e.altKey || this.gameCompleted) return;
+
+            const key = e.key;
+            if (/^[a-zæøå]$/i.test(key)) {
+                e.preventDefault();
+                this.addLetter(key.toUpperCase());
+            } else if (key === 'Backspace') {
+                e.preventDefault();
+                this.deleteLetter();
+            } else if (key === 'Enter') {
+                e.preventDefault();
+                if (e.repeat || this.isSubmitting) return;
+                this.isSubmitting = true;
+                try {
+                    await this.submitRow();
+                } finally {
+                    this.isSubmitting = false;
+                }
+            } else if (key === 'ArrowRight') {
+                e.preventDefault();
+                this.moveToNextCell();
+            } else if (key === 'ArrowLeft') {
+                e.preventDefault();
+                this.moveToPreviousCell();
+            }
         });
     }
     
